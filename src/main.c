@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[]) {
 
-  BC_Connection *conn = bc_connect("127.0.0.1", 8080);
+  BC_Connection *conn = bc_connect("5.135.136.236", 8080);
 
   bc_get_world_info(conn);
 
