@@ -56,11 +56,21 @@ BC_WorldInfo bc_get_world_info(BC_Connection *connection) {
   client->QueueMessage(message);
 
   ServerClientMessage response = client->WaitForMessage(filter_wo);
-  std::cout << "Got response, mapX=" << response.world_options().map_x()
-            << " mapY=" << response.world_options().map_y() << std::endl;
 
-  return {};
+  BC_WorldInfo wi = {};
+
+  if (response.has_world_options()) {
+    const auto &world_options = response.world_options();
+    wi.map_x = world_options.map_x();
+    wi.map_y = world_options.map_y();
+    wi.player_count = world_options.max_players();
+    wi.auto_shoot_enabled = world_options.auto_shoot_allowed();
+    wi.radar_enabled = world_options.radar_enabled();
+  }
+
+  return wi;
 }
+
 BC_PlayerData bc_get_player_data(BC_Connection *connection) {
   TCPClient *client = (TCPClient *)connection;
   return client->GetPlayerData();
@@ -76,6 +86,41 @@ void bc_set_speed(BC_Connection *connection, double x, double y, double z) {
   client->QueueMessage(message);
 }
 
+bool filter_sr(ServerClientMessage message) {
+  return message.has_shoot_result();
+}
+
+BC_ShootResult bc_shoot(BC_Connection *connection, double angle) {
+  TCPClient *client = (TCPClient *)connection;
+
+  ClientServerMessage message;
+  message.mutable_shoot()->set_angle(angle);
+
+  client->QueueMessage(message);
+
+  ServerClientMessage response = client->WaitForMessage(filter_sr);
+  const auto &shoot_result = response.shoot_result();
+
+  BC_ShootResult result = {};
+
+  // Populate the BC_ShootResult structure from the ShootResult message
+  result.success = shoot_result.success();
+
+  if (shoot_result.has_target_id()) {
+    result.target_id = shoot_result.target_id();
+  }
+
+  if (shoot_result.has_damage_points()) {
+    result.damage_points = shoot_result.damage_points();
+  }
+
+  if (shoot_result.has_target_destroyed()) {
+    result.target_destroyed = shoot_result.target_destroyed();
+  }
+
+  return result;
+}
+
 bool filter_rr(ServerClientMessage message) {
   return message.has_radar_result();
 }
@@ -89,7 +134,6 @@ BC_List *bc_radar_ping(BC_Connection *connection) {
   client->QueueMessage(message);
 
   ServerClientMessage response = client->WaitForMessage(filter_rr);
-  std::cout << "Got response " << response.DebugString() << std::endl;
   auto radar_result = response.radar_result();
   size_t radar_return_size = radar_result.radar_return_size();
 
@@ -108,17 +152,18 @@ BC_List *bc_radar_ping(BC_Connection *connection) {
     bc_map_object->id = radar_return.id();
 
     LinkedList *entry = new LinkedList(bc_map_object);
-    LinkedList::Add(ll, entry);
+    ll->Add(entry);
+
     ll = entry;
   }
 
-  return (BC_List *)LinkedList::Rewind(ll);
+  return (BC_List *)ll->Rewind();
 }
 
 BC_List *bc_ll_next(BC_List *linked_list) {
-  return (BC_List *)LinkedList::Next((LinkedList *)linked_list);
+  return (BC_List *)(((LinkedList *)linked_list)->Next());
 }
 void *bc_ll_value(BC_List *linked_list) {
-  return (void *)LinkedList::Value((LinkedList *)linked_list);
+  return (void *)(((LinkedList *)linked_list)->Value());
 }
 }

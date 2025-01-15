@@ -17,6 +17,10 @@ message PlayerData {
   int32 id = 1;
   optional Vector3 position = 2;
   optional Vector3 speed = 3;
+  int32 health = 4;
+  int32 armor = 5;
+  int32 score = 6;
+  bool alive = 7;
 }
 
 enum RadarReturnType {
@@ -77,6 +81,7 @@ message ShootResult {
   bool success = 1;
   optional uint64 target_id = 2;
   optional uint64 damage_points = 3;
+  optional bool target_destroyed = 4;
 }
 
 message ServerClientMessage {

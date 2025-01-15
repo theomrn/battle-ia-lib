@@ -29,7 +29,6 @@ void TCPClient::Handle() {
       break;
     else if (error)
       throw boost::system::system_error(error);
-    std::cout << "reading message_size = " << message_size << std::endl;
 
     std::vector<uint8_t> buffer(message_size);
     socket.value().read_some(boost::asio::buffer(buffer), error);
@@ -58,6 +57,10 @@ bool TCPClient::HandleMessage(ServerClientMessage sc_message) {
     this->local_player_data_.speed.y = player_data.speed().y();
     this->local_player_data_.speed.z = player_data.speed().z();
 
+    this->local_player_data_.health = player_data.health();
+    this->local_player_data_.is_dead = !player_data.alive();
+    this->local_player_data_.armor = player_data.armor();
+    this->local_player_data_.score = player_data.score();
     return false;
   }
   return true;
@@ -98,8 +101,6 @@ void TCPClient::SendQueue() {
     socket.value().write_some(boost::asio::buffer(output));
 
     this->sendq.pop();
-    std::cout << "Message sent: 1 (magic) + 4 (size) + " << packet_size
-              << " (data), seq_number = " << message.message_id() << std::endl;
   }
 }
 

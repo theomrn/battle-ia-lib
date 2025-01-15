@@ -1,6 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
+#include <cstdlib>
 class LinkedList {
 private:
   LinkedList *next_ = nullptr;
@@ -8,20 +9,19 @@ private:
   void *value_;
 
 public:
-  LinkedList(void *value)
-      : value_(value) {
+  explicit LinkedList(void *value) : value_(value) {}
 
-        };
+  ~LinkedList() { free(value_); };
 
-  static LinkedList *Next(LinkedList *linked_list);
-  static LinkedList *Prev(LinkedList *linked_list);
-  static void *Value(LinkedList *linked_list);
+  LinkedList *Next() const;
+  LinkedList *Prev() const;
+  void *Value() const;
 
-  static LinkedList *Rewind(LinkedList *linked_list);
-  static LinkedList *WalkToEnd(LinkedList *linked_list);
+  LinkedList *Rewind();
+  LinkedList *WalkToEnd();
   static void Free(LinkedList *linked_list);
 
-  static void Add(LinkedList *previous, LinkedList *next);
+  void Add(LinkedList *next);
 };
 
-#endif
+#endif // LIST_HPP
