@@ -9,3 +9,13 @@ char* BC_ObjectTypeToString(enum BC_ObjectType type) {
         default:        return "UNKNOWN";
     }
 }
+
+void Print_BC_PlayerData(struct BC_PlayerData_ data) {
+    printf("Player id : %d, health : %d, armor : %d, score : %d\n",
+    data.id,
+    data.health,
+    data.armor,
+    data.score
+    );
+    return;
+}
