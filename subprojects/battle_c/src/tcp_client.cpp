@@ -35,6 +35,7 @@ void TCPClient::Handle() {
     {
       ServerClientMessage message;
       message.ParseFromArray(buffer.data(), buffer.size());
+
       if (this->HandleMessage(message)) {
         std::lock_guard guard(this->cv_recvq_m);
         this->recvq.push(message);
@@ -66,10 +67,12 @@ bool TCPClient::HandleMessage(ServerClientMessage sc_message) {
     if (this->game_ended_handler != nullptr) {
       this->game_ended_handler(this->local_player_data_);
     }
+    return false;
   } else if (sc_message.has_game_started()) {
     if (this->game_started_handler != nullptr) {
       this->game_started_handler();
     }
+    return false;
   }
   return true;
 }
