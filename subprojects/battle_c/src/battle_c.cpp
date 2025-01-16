@@ -150,6 +150,7 @@ BC_List *bc_radar_ping(BC_Connection *connection) {
     bc_map_object->speed.y = radar_return.speed().y();
 
     bc_map_object->id = radar_return.id();
+    bc_map_object->type = (BC_ObjectType)radar_return.return_type();
 
     LinkedList *entry = new LinkedList(bc_map_object);
     ll->Add(entry);
