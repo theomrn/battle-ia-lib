@@ -1,1 +1,4 @@
 subprojects/battle_c/.cache/
+compile_commands.json
+.vscode/
+.cache/
