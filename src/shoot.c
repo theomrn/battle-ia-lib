@@ -12,9 +12,11 @@ float Calculate_Position(float x_a, float x_b, float y_a, float y_b){
 }
 
 BC_ShootResult ShootOnTarget(BC_Connection *connection, float x_a, float x_b, float y_a, float y_b){
-    BC_ShootResult shootresult =  bc_shoot(connection, Calculate_Position(x_a, x_b, y_a, y_b));
+    return bc_shoot(connection, Calculate_Position(x_a, x_b, y_a, y_b));
+}
+void printShootInfo(BC_ShootResult shootresult){
     printf("Succès : %b\n",shootresult.success);
     printf("Target ID = %d\n",(int) shootresult.target_id);
     printf("Dégats : %d\n",(int) shootresult.damage_points);
-    printf("Cible détruite ? : %b\n",shootresult.target_destroyed);
+    printf("Cible détruite ? : %b\n",shootresult.target_destroyed);   
 }
