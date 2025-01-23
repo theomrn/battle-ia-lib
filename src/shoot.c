@@ -12,5 +12,4 @@ float Calculate_Position(float x_a, float x_b, float y_a, float y_b){
 
 bool ShootOnTarget(float x_a, float x_b, float y_a, float y_b){
     float radiant = Calculate_Position(x_a, x_b, y_a, y_b);
-    
 }
