@@ -12,10 +12,6 @@ BC_Connection *bc_connect(const char *host, int port) {
 
     // Attempt to connect
     client->Connect(std::string(host), port);
-    {
-      using namespace std::chrono_literals;
-      std::this_thread::sleep_for(1s);
-    }
 
     // Send initial client message
     {
@@ -167,6 +163,8 @@ BC_List *bc_ll_next(BC_List *linked_list) {
 void *bc_ll_value(BC_List *linked_list) {
   return (void *)(((LinkedList *)linked_list)->Value());
 }
+
+void bc_ll_free(BC_List *linked_list) { auto ll = (LinkedList *)linked_list; }
 
 void bc_set_game_ended_handler(
     BC_Connection *connection,
