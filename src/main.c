@@ -14,21 +14,18 @@ int main(int argc, char *argv[]) {
   bc_set_speed(conn, 1.2, 0.4, 0);
 
   BC_PlayerData data = bc_get_player_data(conn);
-
+  float target_x = 0;        // Position de la cible
+  float target_y = 53;        // Position de la cible
   BC_List *list = bc_radar_ping(conn);
   sleep(3);
-  printShootInfo(ShootOnTarget(conn, data.position.x, data.position.y, 27, 8));
-  sleep(3);
-
-  printShootInfo(ShootOnTarget(conn, data.position.x, data.position.y, 90, 31));
-  sleep(3);
-
-  printShootInfo(ShootOnTarget(conn, data.position.x, data.position.y, 28, 36));
-  sleep(3);
-  printShootInfo(ShootOnTarget(conn, data.position.x, data.position.y, 28, 36));
+  printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
+    sleep(3);
+  printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
+    sleep(3);
+  printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
   do {
     BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
-    printf("map_object x = %d, y = %d", map_object->position.x,
+    printf("map_object x = %f, y = %f", map_object->position.x,
            map_object->position.y);
 
   } while (((list = bc_ll_next(list)) != NULL));
