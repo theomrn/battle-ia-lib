@@ -6,12 +6,13 @@ float Get_Radius_Angle(float x,float y){
 }
 
 float Calculate_Position(float x_a, float x_b, float y_a, float y_b){
-    int delta_x = x_a - x_b;
-    int delta_y = y_a - y_b;
+    float delta_x = x_a - x_b;
+    float delta_y = y_a - y_b;
     return Get_Radius_Angle(delta_x, delta_y);
 }
 
 BC_ShootResult ShootOnTarget(BC_Connection *connection, float x_a, float x_b, float y_a, float y_b){
+    printf("Tir en cours...");
     return bc_shoot(connection, Calculate_Position(x_a, x_b, y_a, y_b));
 }
 void printShootInfo(BC_ShootResult shootresult){

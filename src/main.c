@@ -1,11 +1,12 @@
 #include "battle_c.h"
-
+#include "shoot.c"
+#include "shoot.h"
 #include "stdio.h"
 #include "stdlib.h"
 
 int main(int argc, char *argv[]) {
 
-  BC_Connection *conn = bc_connect("5.135.136.236", 8080);
+  BC_Connection *conn = bc_connect("localhost", 8080);
 
   bc_get_world_info(conn);
 
@@ -14,6 +15,11 @@ int main(int argc, char *argv[]) {
   BC_PlayerData data = bc_get_player_data(conn);
 
   BC_List *list = bc_radar_ping(conn);
+
+  printShootInfo(ShootOnTarget(conn, data.position.x, data.position.y, 54, 32));
+  printShootInfo(ShootOnTarget(conn, data.position.x, data.position.y, 54, 32));
+  printShootInfo(ShootOnTarget(conn, data.position.x, data.position.y, 54, 32));
+  printShootInfo(ShootOnTarget(conn, data.position.x, data.position.y, 54, 32));
 
   do {
     BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
