@@ -1,16 +1,3 @@
-#include "battle_c.h"
-#include "tool.h"
-
-#include "stdio.h"
-#include "stdlib.h"
-#include <unistd.h>
-
-int main(int argc, char *argv[])
-{
-  printf("Initialisation du bot\n");
-  fflush(stdout);
-
-=======
 #include "shoot.c"
 #include "shoot.h"
 #include "stdio.h"
@@ -18,7 +5,7 @@ int main(int argc, char *argv[])
 #include "unistd.h"
 
 int main(int argc, char *argv[]) {
-  
+
   BC_Connection *conn = bc_connect("5.135.136.236", 8080);
   printf("Connection réussi\n");
   fflush(stdout);
@@ -32,9 +19,9 @@ int main(int argc, char *argv[]) {
 
   // Retrive user informations
   BC_PlayerData data = bc_get_player_data(conn);
-  Print_BC_PlayerData(&data);
-  // Mise à jour des informations
-  // BC_PlayerData data = bc_get_player_data(conn);
+  Print_BC_PlayerData(data);
+  fflush(stdout);
+
 
   while (true)
   {
@@ -59,8 +46,6 @@ int main(int argc, char *argv[]) {
     bc_ll_free(list);
   }
 
-  
-  
   float target_x = 23.867260;        // Position de la cible
   float target_y = 49.615505;        // Position de la cible
   BC_List *list = bc_radar_ping(conn);
@@ -70,16 +55,6 @@ int main(int argc, char *argv[]) {
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
     sleep(3);
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
-  while (true){
-    int a = 0;
-    a++;
-  }
-  do {
-    BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
-    printf("map_object x = %f, y = %f", map_object->position.x,
-           map_object->position.y);
 
-  } while (((list = bc_ll_next(list)) != NULL));
->>>>>>> main
   return EXIT_SUCCESS;
 }
