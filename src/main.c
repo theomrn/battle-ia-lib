@@ -3,7 +3,6 @@
 
 #include "stdio.h"
 #include "stdlib.h"
-#include <unistd.h>
 
 typedef struct Radar {
     BC_MapObject radar;
@@ -104,4 +103,5 @@ int main(int argc, char *argv[]) {
     free_list(wall_list);
 
     return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }

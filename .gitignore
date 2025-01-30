@@ -1,9 +1,5 @@
 subprojects/battle_c/.cache/
 compile_commands.json
-<<<<<<< HEAD
-./cache
-./vscode
-=======
 .vscode/
 .cache/
->>>>>>> main
+settings.json
