@@ -53,24 +53,22 @@ int main(int argc, char *argv[]) {
 
             bc_ll_free(head);
         }
+        sleep(1);
+        printf("Id du joueur ciblé : %d\n",player_list -> radar.id);
+        printf("Mon id : %d\n",data.id);
+        printf("Santé de la cible : %d",player_list -> radar.health);
+        do {
+            printShootInfo(ShootOnTarget(conn, data.position.x, player_list -> radar.position.x, data.position.y, player_list -> radar.position.y));
+            player_list = player_list -> next;
+        } while (player_list -> radar.id == data.id && player_list -> radar.health != 0 );
 
-        print_list(player_list, "Joueurs");
-        print_list(wall_list, "Murs");
+        //print_list(player_list, "Joueurs");
+        //print_list(wall_list, "Murs");
 
     }
 
     free_list(player_list);
     free_list(wall_list);
-
-  float target_x = 23.867260;        // Position de la cible
-  float target_y = 49.615505;        // Position de la cible
-  BC_List *list = bc_radar_ping(conn);
-  sleep(3);
-  printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
-    sleep(3);
-  printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
-    sleep(3);
-  printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
 
   return EXIT_SUCCESS;
 }
