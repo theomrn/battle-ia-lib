@@ -2,7 +2,6 @@
 #include "tool.h"
 #include "stdio.h"
 
-
 char* BC_ObjectTypeToString(enum BC_ObjectType type) {
     switch (type) {
         case OT_PLAYER: return "PLAYER";
