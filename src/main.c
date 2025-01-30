@@ -18,10 +18,6 @@ int main(int argc, char *argv[]) {
   fflush(stdout);
   bc_get_world_info(conn);
 
-    BC_WorldInfo world = bc_get_world_info(conn);
-    printf("Taille d'arene\nX: %d, Y: %d\n", world.map_x, world.map_y);
-    fflush(stdout);
-
   // Retrive user informations
   BC_PlayerData data = bc_get_player_data(conn);
   Print_BC_PlayerData(data);

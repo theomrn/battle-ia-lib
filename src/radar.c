@@ -1,6 +1,6 @@
 #include "battle_c.h"
 #include "tool.h"
-
+#include "radar.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include <unistd.h>
