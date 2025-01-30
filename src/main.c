@@ -14,8 +14,8 @@ int main(int argc, char *argv[]) {
   bc_set_speed(conn, 0, 0, 0);
 
   BC_PlayerData data = bc_get_player_data(conn);
-  float target_x = 29.857883;        // Position de la cible
-  float target_y = 82.468407;        // Position de la cible
+  float target_x = 23.867260;        // Position de la cible
+  float target_y = 49.615505;        // Position de la cible
   BC_List *list = bc_radar_ping(conn);
   sleep(3);
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
