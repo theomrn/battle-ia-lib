@@ -2,6 +2,7 @@
 #include "shoot.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "tool.h"
 #include "unistd.h"
 
 int main(int argc, char *argv[]) {
@@ -11,7 +12,7 @@ int main(int argc, char *argv[]) {
   fflush(stdout);
 
   BC_WorldInfo world = bc_get_world_info(conn);
-  printf("Arena size\nX: %d, Y: %d\n", world.map_x, world.map_y);
+  printf("Arena size\nX: %ld, Y: %ld\n", world.map_x, world.map_y);
   fflush(stdout);
   bc_get_world_info(conn);
 
