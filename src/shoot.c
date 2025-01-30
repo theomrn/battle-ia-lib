@@ -2,13 +2,13 @@
 #include "battle_c.h"
 
 float Get_Radius_Angle(float x, float y){
-    return atan2f(y, x); 
+    return atan2f(y, x);
 }
 
 float Calculate_Position(float x_a, float x_b, float y_a, float y_b){
     float delta_x = x_b - x_a;  // Inverser ici
     float delta_y = y_b - y_a;  // Inverser ici
-    
+
     // Affichage des coordonnées pour déboguer
     printf("Calcul de l'angle:\n");
     printf("x_a = %f, x_b = %f, y_a = %f, y_b = %f\n", x_a, x_b, y_a, y_b);

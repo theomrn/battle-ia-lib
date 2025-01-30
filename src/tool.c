@@ -19,13 +19,13 @@ void Print_BC_PlayerPosition(struct BC_PlayerData_ data) {
     return;
 }
 
-void Print_BC_PlayerData(struct BC_PlayerData_* data) {
+void Print_BC_PlayerData(struct BC_PlayerData_ data) {
     printf("Player id : %d, health : %d, armor : %d, score : %d\n",
-    data->id,
-    data->health,
-    data->armor,
-    data->score
+    data.id,
+    data.health,
+    data.armor,
+    data.score
     );
-    // Print_BC_PlayerPosition(data);
+    Print_BC_PlayerPosition(data);
     return;
 }
