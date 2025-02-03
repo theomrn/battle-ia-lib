@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
         printf("Santé de la cible : %d",player_list -> radar.health);
         do {
             printShootInfo(ShootOnTarget(conn, data.position.x, player_list -> radar.position.x, data.position.y, player_list -> radar.position.y));
+            printf("%d",player_list -> radar.type);
             player_list = player_list -> next;
             sleep(3);
         } while (player_list -> radar.id != data.id && player_list -> radar.health != 0 );
