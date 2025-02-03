@@ -53,16 +53,16 @@ int main(int argc, char *argv[]) {
 
             bc_ll_free(head);
         }
-        sleep(1);
         printf("Id du joueur ciblé : %d\n",player_list -> radar.id);
         printf("Mon id : %d\n",data.id);
         printf("Santé de la cible : %d",player_list -> radar.health);
         do {
             printShootInfo(ShootOnTarget(conn, data.position.x, player_list -> radar.position.x, data.position.y, player_list -> radar.position.y));
             player_list = player_list -> next;
-        } while (player_list -> radar.id == data.id && player_list -> radar.health != 0 );
+            sleep(3);
+        } while (player_list -> radar.id != data.id && player_list -> radar.health != 0 );
 
-        //print_list(player_list, "Joueurs");
+        print_list(player_list, "Joueurs");
         //print_list(wall_list, "Murs");
 
     }
