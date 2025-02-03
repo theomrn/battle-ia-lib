@@ -1,5 +1,7 @@
 #include "shoot.c"
 #include "shoot.h"
+#include "radar.c"
+#include "radar.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "tool.h"
@@ -17,37 +19,49 @@ int main(int argc, char *argv[]) {
   fflush(stdout);
   bc_get_world_info(conn);
 
-  bc_set_speed(conn, 0, 0, 0);
-
   // Retrive user informations
   BC_PlayerData data = bc_get_player_data(conn);
   Print_BC_PlayerData(data);
   fflush(stdout);
 
+    Radar *player_list = NULL;
+    Radar *wall_list = NULL;
 
-  while (true)
-  {
-    BC_List *list = bc_radar_ping(conn);
+    while (true) {
+        printf("\nScan radar --------------------------------------------------\n");
+        
+        BC_List *list = bc_radar_ping(conn);
+        if (list == NULL) {
+            printf("Aucun objet détecté.\n");
+        } else {
+            free_list(player_list);
+            free_list(wall_list);
+            player_list = NULL;
+            wall_list = NULL;
 
-    // While the linked list is read, print informations in the terminal
-    int i = 0;
-    do
-    {
-      BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
-      i++;
-      printf("index : %d ,id %d,map_object x = %f, y = %f, type (int/Text) = %d / %s \n",
-             i,
-             map_object->id,
-             map_object->position.x,
-             map_object->position.y,
-             map_object->type,
-             BC_ObjectTypeToString(map_object->type) // Convert from int to text the enum
-      );
-      fflush(stdout);
-    } while (((list = bc_ll_next(list)) != NULL));
-    bc_ll_free(list);
-  }
-  
+             BC_List *head = list;
+            do {
+                BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
+
+                if (map_object->type == OT_PLAYER) {
+                    player_list = Radar_list(player_list, map_object);
+                } else if (map_object->type == OT_WALL) {
+                    wall_list = Radar_list(wall_list, map_object);
+                }
+
+            } while ((list = bc_ll_next(list)) != NULL);
+
+            bc_ll_free(head);
+        }
+
+        print_list(player_list, "Joueurs");
+        print_list(wall_list, "Murs");
+
+    }
+
+    free_list(player_list);
+    free_list(wall_list);
+
   float target_x = 23.867260;        // Position de la cible
   float target_y = 49.615505;        // Position de la cible
   BC_List *list = bc_radar_ping(conn);
@@ -63,25 +77,4 @@ int main(int argc, char *argv[]) {
   float vitesse = 10;
 
   // Boucle tant que le personnage n'est pas dans la zone cible
-  while (sqrt(pow(data.position.x - coo_x, 2) + pow(data.position.y - coo_y, 2)) > 2) {
   movePlayer(conn, coo_x, coo_y, data, &vitesse);
-        
-    // Mettre à jour les données du joueur
-    data = bc_get_player_data(conn);
-        
-    // Debug : afficher les coordonnées actuelles
-    printf("coo : x = %f , y = %f \n", data.position.x, data.position.y);
-    fflush(stdout);
-
-    // Attendre un peu pour éviter une surcharge CPU
-    usleep(50000);  // 50ms
-  }
-
-  // Arrêt total une fois la position atteinte
-  printf("\n\n\nEnd of program\n");
-  while (true){
-    bc_set_speed(conn, 0.0, 0.0, 0.0);
-  }  
-  */
-  return EXIT_SUCCESS;
-}
