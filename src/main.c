@@ -4,6 +4,7 @@
 #include "stdlib.h"
 #include "tool.h"
 #include "unistd.h"
+#include "movement.h"
 
 int main(int argc, char *argv[]) {
 
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]) {
     } while (((list = bc_ll_next(list)) != NULL));
     bc_ll_free(list);
   }
-
+  
   float target_x = 23.867260;        // Position de la cible
   float target_y = 49.615505;        // Position de la cible
   BC_List *list = bc_radar_ping(conn);
@@ -56,6 +57,31 @@ int main(int argc, char *argv[]) {
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
     sleep(3);
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
+  /* uncoment to move 
+  double coo_x = 10.0; 
+  double coo_y = 10.0;
+  float vitesse = 10;
 
+  // Boucle tant que le personnage n'est pas dans la zone cible
+  while (sqrt(pow(data.position.x - coo_x, 2) + pow(data.position.y - coo_y, 2)) > 2) {
+  movePlayer(conn, coo_x, coo_y, data, &vitesse);
+        
+    // Mettre à jour les données du joueur
+    data = bc_get_player_data(conn);
+        
+    // Debug : afficher les coordonnées actuelles
+    printf("coo : x = %f , y = %f \n", data.position.x, data.position.y);
+    fflush(stdout);
+
+    // Attendre un peu pour éviter une surcharge CPU
+    usleep(50000);  // 50ms
+  }
+
+  // Arrêt total une fois la position atteinte
+  printf("\n\n\nEnd of program\n");
+  while (true){
+    bc_set_speed(conn, 0.0, 0.0, 0.0);
+  }  
+  */
   return EXIT_SUCCESS;
 }

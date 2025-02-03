@@ -4,17 +4,20 @@
 #include <stdio.h>
 
 
-void movePlayer(BC_Connection *connection, double x, double y,BC_PlayerData player,float vitesse){
-    static clock_t last_set_speed = 0;
-
+void movePlayer(BC_Connection *connection, double x, double y,BC_PlayerData player,float *vitesse){
+    player = bc_get_player_data(connection);
     float vecteur_x = x - player.position.x;
     float vecteur_y = y - player.position.y;
 
     float distance = sqrt(vecteur_x*vecteur_x + vecteur_y*vecteur_y);
 
-    // printf("vecteur x = %f vecteur y = %f distance = %f\n",vecteur_x,vecteur_y,distance);
-
-    if (distance < 2.0) {  
+    if (distance < 25) *vitesse /= 2;
+    if (distance < 20) *vitesse = 2;
+    if (distance < 10) *vitesse /= 0.5;
+    
+    // Si on est suffisamment proche, on arrête le mouvement
+    if (distance < 2) {  // Seuil ajustable
+        *vitesse = 0;
         bc_set_speed(connection, 0, 0, 0);
         return;
     }
@@ -24,17 +27,7 @@ void movePlayer(BC_Connection *connection, double x, double y,BC_PlayerData play
     float direction_y = vecteur_y / distance;
 
     // Appliquer une vitesse constante 
-    float new_speed_x = direction_x * vitesse;
-    float new_speed_y = direction_y * vitesse;
-
-    clock_t now = clock();
-    printf("sls = %f, now = %f \n", last_set_speed, now);
-    fflush(stdout);
-    if((now - last_set_speed) / CLOCKS_PER_SEC > 1) {
-        last_set_speed = clock();
-        printf("setSpeed\n");
-        fflush(stdout);
-        // Définir la nouvelle vitesse
-        bc_set_speed(connection, new_speed_x, new_speed_y, 0);
-    }
+    float new_speed_x = direction_x * (*vitesse);
+    float new_speed_y = direction_y * (*vitesse);
+    bc_set_speed(connection, new_speed_x, new_speed_y, 0);
 }

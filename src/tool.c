@@ -12,7 +12,7 @@ char* BC_ObjectTypeToString(enum BC_ObjectType type) {
 }
 
 void Print_BC_PlayerPosition(struct BC_PlayerData_ data) {
-    printf("Position x: %d y: %d\n",
+    printf("Position x: %f y: %f\n",
     data.position.x,
     data.position.y
     );
