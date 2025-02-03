@@ -6,6 +6,7 @@
 #include "stdlib.h"
 #include "tool.h"
 #include "unistd.h"
+#include "movement.h"
 
 int main(int argc, char *argv[]) {
 
@@ -22,7 +23,6 @@ int main(int argc, char *argv[]) {
   BC_PlayerData data = bc_get_player_data(conn);
   Print_BC_PlayerData(data);
   fflush(stdout);
-
 
     Radar *player_list = NULL;
     Radar *wall_list = NULL;
@@ -71,6 +71,10 @@ int main(int argc, char *argv[]) {
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
     sleep(3);
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
+  /* uncoment to move 
+  double coo_x = 10.0; 
+  double coo_y = 10.0;
+  float vitesse = 10;
 
-  return EXIT_SUCCESS;
-}
+  // Boucle tant que le personnage n'est pas dans la zone cible
+  movePlayer(conn, coo_x, coo_y, data, &vitesse);

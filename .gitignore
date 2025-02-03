@@ -2,3 +2,5 @@ subprojects/battle_c/.cache/
 compile_commands.json
 .vscode/*
 .cache/
+/subprojects/protobuf-25.2/
+/subprojects/packagecache/
