@@ -6,6 +6,7 @@
 #include "stdlib.h"
 #include "tool.h"
 #include "unistd.h"
+#include "movement.h"
 
 int main(int argc, char *argv[]) {
 
@@ -22,7 +23,6 @@ int main(int argc, char *argv[]) {
   BC_PlayerData data = bc_get_player_data(conn);
   Print_BC_PlayerData(data);
   fflush(stdout);
-
 
     Radar *player_list = NULL;
     Radar *wall_list = NULL;
@@ -71,5 +71,3 @@ int main(int argc, char *argv[]) {
     free_list(player_list);
     free_list(wall_list);
 
-  return EXIT_SUCCESS;
-}
