@@ -1,12 +1,10 @@
-#include "shoot.h"
-#include "shoot.h"
 #include "radar.h"
 #include "radar.h"
+#include "shoot.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "tool.h"
 #include "unistd.h"
-#include "movement.h"
 
 int main(int argc, char *argv[]) {
 
@@ -18,6 +16,8 @@ int main(int argc, char *argv[]) {
   printf("Arena size\nX: %ld, Y: %ld\n", world.map_x, world.map_y);
   fflush(stdout);
   bc_get_world_info(conn);
+  float speed = 20.0;
+  float* speedf = &speed;
 
   // Retrive user informations
   BC_PlayerData data = bc_get_player_data(conn);
@@ -38,7 +38,6 @@ int main(int argc, char *argv[]) {
       free_list(wall_list);
       player_list = NULL;
       wall_list = NULL;
-
       BC_List *head = list;
       do {
         BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
@@ -48,7 +47,12 @@ int main(int argc, char *argv[]) {
           } else if (map_object->type == OT_WALL) {
             wall_list = Radar_list(wall_list, map_object);
         }
-
+        do {
+            printShootInfo(ShootOnTarget(conn, data.position.x, player_list -> radar.position.x, data.position.y, player_list -> radar.position.y));
+            //movePlayer(conn, player_list -> radar.position.x , player_list -> radar.position.y, data, speedf);
+            printf("%d",player_list -> radar.type);
+            player_list = player_list -> next;
+        } while (player_list -> radar.id != data.id && player_list -> radar.health != 0 );
       } while ((list = bc_ll_next(list)) != NULL);
       bc_ll_free(head);
     }
@@ -70,4 +74,5 @@ int main(int argc, char *argv[]) {
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
     sleep(3);
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
+
 }
