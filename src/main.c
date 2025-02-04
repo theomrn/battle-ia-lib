@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
   fflush(stdout);
   bc_get_world_info(conn);
   float speed = 20.0;
-  float *speedf = &speed;
 
   // Retrive user informations
   BC_PlayerData data = bc_get_player_data(conn);
@@ -84,6 +83,7 @@ int main(int argc, char *argv[])
     print_list(boost_list, "Boost");
     //print_list(wall_list, "Murs");
     //fflush(stdout);
+    movePlayer(conn,boost_list->radar.position.x,boost_list->radar.position.y,data,&speed);
   }
 
   free_list(player_list);
