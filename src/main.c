@@ -64,8 +64,10 @@ int main(int argc, char *argv[])
           wall_list = Radar_list(wall_list, map_object);
         }
         else if (map_object->type == OT_BOOST){
-          printf("Boost détecté\n");
-          boost_list = Radar_list(boost_list, map_object);
+            // check if the boost is in the walls, the tank may be stuck if the boost is near the limit of the map
+            if ((map_object->position.x > 1) && (map_object->position.x < world.map_x-1) && (map_object->position.y > 1) && (map_object->position.y < world.map_y-1)){
+                boost_list = Radar_list(boost_list, map_object);
+            }
         }
         /*do {
             printShootInfo(ShootOnTarget(conn, data.position.x, player_list -> radar.position.x, data.position.y, player_list -> radar.position.y));
