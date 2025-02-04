@@ -9,90 +9,43 @@
 int main(int argc, char *argv[])
 {
 
-  BC_Connection *conn = bc_connect("5.135.136.236", 8080);
-  printf("Connection réussi\n");
-  fflush(stdout);
-
-  BC_WorldInfo world = bc_get_world_info(conn);
-  printf("Arena size\nX: %ld, Y: %ld\n", world.map_x, world.map_y);
-  fflush(stdout);
-  bc_get_world_info(conn);
-  float speed = 20.0;
-
-  // Retrive user informations
-  BC_PlayerData data = bc_get_player_data(conn);
-  Print_BC_PlayerData(data);
-  fflush(stdout);
-
-  Radar *player_list = NULL;
-  Radar *wall_list = NULL;
-  Radar *boost_list = NULL;
-
-
-  while (!data.is_dead)
-  {
-    printf("\nScan radar --------------------------------------------------\n");
+    BC_Connection *conn = bc_connect("5.135.136.236", 8080);
+    printf("Connection réussi\n");
     fflush(stdout);
 
-    BC_List *list = bc_radar_ping(conn);
-    if (list == NULL)
-    {
-      printf("Aucun objet détecté.\n");
-      fflush(stdout);
-    }
-    else
-    {
-
-      free_list(player_list);
-      free_list(wall_list);
-      free_list(boost_list);
-      player_list = NULL;
-      wall_list = NULL;
-      boost_list = NULL;
-
-
-      BC_List *head = list;
-      do
-      {
-        BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
-        if (map_object->type == OT_PLAYER)
-        {
-          player_list = Radar_list(player_list, map_object);
-        }
-        else if (map_object->type == OT_WALL)
-        {
-          wall_list = Radar_list(wall_list, map_object);
-        }
-        else if (map_object->type == OT_BOOST){
-            // check if the boost is in the walls, the tank may be stuck if the boost is near the limit of the map
-            if ((map_object->position.x > 1) && (map_object->position.x < world.map_x-1) && (map_object->position.y > 1) && (map_object->position.y < world.map_y-1)){
-                boost_list = Radar_list(boost_list, map_object);
-            }
-        }
-        /*do {
-            printShootInfo(ShootOnTarget(conn, data.position.x, player_list -> radar.position.x, data.position.y, player_list -> radar.position.y));
-            //movePlayer(conn, player_list -> radar.position.x , player_list -> radar.position.y, data, speedf);
-            printf("%d",player_list -> radar.type);
-            fflush(stdout);
-            player_list = player_list -> next;
-        } while (player_list -> radar.id != data.id && player_list -> radar.health != 0 );*/
-      } while ((list = bc_ll_next(list)) != NULL);
-      bc_ll_free(head);
-    }
-
-    print_list(player_list, "Joueurs");
+    BC_WorldInfo world = bc_get_world_info(conn);
+    printf("Arena size\nX: %ld, Y: %ld\n", world.map_x, world.map_y);
     fflush(stdout);
-    print_list(boost_list, "Boost");
-    //print_list(wall_list, "Murs");
-    //fflush(stdout);
-    movePlayer(conn,boost_list->radar.position.x,boost_list->radar.position.y,data,&speed);
-  }
+    bc_get_world_info(conn);
+    float speed = 20.0;
 
-  free_list(player_list);
-  free_list(wall_list);
-  free_list(boost_list);
+    // Retrive user informations
+    BC_PlayerData data = bc_get_player_data(conn);
+    Print_BC_PlayerData(data);
+    fflush(stdout);
 
+    Radar *player_list = NULL;
+    Radar *wall_list = NULL;
+    Radar *boost_list = NULL;
 
-  printf('Fin de script');
-  return EXIT_SUCCESS;
+    while (!data.is_dead)
+    {
+        printf("\nScan radar\n");
+        fflush(stdout);
+
+        // Ping the map and provide the list of players, walls and boosts
+        process_radar_ping(conn, world, &player_list, &wall_list, &boost_list);
+
+        /*print_list(player_list, "Joueurs");
+        fflush(stdout);
+        print_list(boost_list, "Boost");
+        fflush(stdout);*/
+    }
+
+    free_list(player_list);
+    free_list(wall_list);
+    free_list(boost_list);
+
+    printf('Fin de script');
+    return EXIT_SUCCESS;
 }
