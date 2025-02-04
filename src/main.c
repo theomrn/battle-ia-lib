@@ -1,6 +1,6 @@
-#include "shoot.c"
 #include "shoot.h"
-#include "radar.c"
+#include "shoot.h"
+#include "radar.h"
 #include "radar.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -24,43 +24,42 @@ int main(int argc, char *argv[]) {
   Print_BC_PlayerData(data);
   fflush(stdout);
 
-    Radar *player_list = NULL;
-    Radar *wall_list = NULL;
+  Radar *player_list = NULL;
+  Radar *wall_list = NULL;
 
-    while (true) {
-        printf("\nScan radar --------------------------------------------------\n");
+  while (true) {
+    printf("\nScan radar --------------------------------------------------\n");
         
-        BC_List *list = bc_radar_ping(conn);
-        if (list == NULL) {
-            printf("Aucun objet détecté.\n");
-        } else {
-            free_list(player_list);
-            free_list(wall_list);
-            player_list = NULL;
-            wall_list = NULL;
+    BC_List *list = bc_radar_ping(conn);
+    if (list == NULL) {
+      printf("Aucun objet détecté.\n");
+    } else {
+      free_list(player_list);
+      free_list(wall_list);
+      player_list = NULL;
+      wall_list = NULL;
 
-             BC_List *head = list;
-            do {
-                BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
+      BC_List *head = list;
+      do {
+        BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
 
-                if (map_object->type == OT_PLAYER) {
-                    player_list = Radar_list(player_list, map_object);
-                } else if (map_object->type == OT_WALL) {
-                    wall_list = Radar_list(wall_list, map_object);
-                }
-
-            } while ((list = bc_ll_next(list)) != NULL);
-
-            bc_ll_free(head);
+        if (map_object->type == OT_PLAYER) {
+          player_list = Radar_list(player_list, map_object);
+          } else if (map_object->type == OT_WALL) {
+            wall_list = Radar_list(wall_list, map_object);
         }
 
-        print_list(player_list, "Joueurs");
-        print_list(wall_list, "Murs");
-
+      } while ((list = bc_ll_next(list)) != NULL);
+      bc_ll_free(head);
     }
 
-    free_list(player_list);
-    free_list(wall_list);
+    print_list(player_list, "Joueurs");
+    print_list(wall_list, "Murs");
+
+  }
+
+  free_list(player_list);
+  free_list(wall_list);
 
   float target_x = 23.867260;        // Position de la cible
   float target_y = 49.615505;        // Position de la cible
@@ -71,10 +70,4 @@ int main(int argc, char *argv[]) {
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
     sleep(3);
   printShootInfo(ShootOnTarget(conn, data.position.x, target_x, data.position.y, target_y));
-  /* uncoment to move 
-  double coo_x = 10.0; 
-  double coo_y = 10.0;
-  float vitesse = 10;
-
-  // Boucle tant que le personnage n'est pas dans la zone cible
-  movePlayer(conn, coo_x, coo_y, data, &vitesse);
+}
