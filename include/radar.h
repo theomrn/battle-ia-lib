@@ -12,5 +12,6 @@ Radar *Radar_list(Radar *head, BC_MapObject *obj);
 void free_list(Radar *head);
 void print_list(Radar *head, const char *type);
 void process_radar_ping(BC_Connection *conn, BC_WorldInfo world, Radar **player_list, Radar **wall_list, Radar **boost_list);
+BC_MapObject nearest(Radar *list, BC_PlayerData data);
 
 #endif

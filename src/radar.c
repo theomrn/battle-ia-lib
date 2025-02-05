@@ -97,3 +97,22 @@ void process_radar_ping(BC_Connection *conn, BC_WorldInfo world, Radar **player_
         bc_ll_free(head);
     }
 }
+
+// Nearest object
+BC_MapObject nearest(Radar *list, BC_PlayerData data){
+    BC_MapObject nearest;
+    float distance = 142; // Maximum distance between two points if the arena is 100x100
+    while (list)
+    {
+        float x = list->radar.position.x - data.position.x;
+        float y = list->radar.position.y - data.position.y;
+        float d = sqrt(x * x + y * y);
+        if (d < distance && data.id != list->radar.id)
+        {
+            distance = d;
+            nearest = list->radar;
+        }
+        list = list->next;
+    }
+    return nearest;
+}
