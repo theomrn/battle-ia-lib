@@ -64,15 +64,11 @@ int main(int argc, char *argv[])
         fflush(stdout);
 
         // Ping the map and provide the list of players, walls and boosts
-        process_radar_ping(conn, world, &player_list, &wall_list, &boost_list);
+        process_radar_ping(conn, world, data, &player_list, &wall_list, &boost_list);
 
-        // Retrieve the nearest boost
+        // Retrieve the nearest boost and move to the nearest boost or random position
         BC_MapObject nearest_boost = nearest(boost_list, data);
-        printf("Boost le plus proche : ID: %d | Position: (x = %f, y = %f)\n", nearest_boost.id, nearest_boost.position.x, nearest_boost.position.y);
-        fflush(stdout);
-
-        // Move to the nearest boost or random position
-        if (nearest_boost.position.x == 0.0 && nearest_boost.position.y == 0.0)
+        if (nearest_boost.position.x < 1 && nearest_boost.position.y < 1) // The radar retrieves the nearest boost with the coordinates (0,0) if null
         {
             printf("Aucun boost détecté.\n");
             fflush(stdout);
@@ -83,30 +79,31 @@ int main(int argc, char *argv[])
             printf("Déplacement vers le boost le plus proche aux coorodonnées x = %f, y = %f\n", nearest_boost.position.x, nearest_boost.position.y);
             fflush(stdout);
             movePlayer(conn, nearest_boost.position.x, nearest_boost.position.y, data, &speed);
-            // movePlayer(conn, 50.0, 50.0, data, &speed);
         }
 
         // Retrieve the nearest player
-        BC_MapObject nearest_player = nearest(player_list, data);
-        if (nearest_player.id == NULL)
+        if (player_list == NULL)
         {
-            printf("Aucun joueur ennemi détecté.\n");
+            printf("Aucun joueur détecté.\n");
             fflush(stdout);
         }
         else
         {
+            BC_MapObject nearest_player = nearest(player_list, data);
             printf("Joueur le plus proche : ID: %d | Position: (x = %f, y = %f)\n", nearest_player.id, nearest_player.position.x, nearest_player.position.y);
             fflush(stdout);
             // Shoot on the nearest ennemy
             printShootInfo(ShootOnTarget(conn, data.position.x, nearest_player.position.x, data.position.y, nearest_player.position.y));
         }
 
-        print_list(boost_list, "boosts");
+        print_list(player_list, "Joueurs");
     }
 
     free_list(player_list);
     free_list(wall_list);
     free_list(boost_list);
+
+    bc_disconnect(conn);
 
     printf('Fin de script');
     return EXIT_SUCCESS;

@@ -13,13 +13,6 @@ void movePlayer(BC_Connection *connection, double x, double y,BC_PlayerData play
 
     if (distance > 15) *vitesse = 10;
     else *vitesse = 5;
-    
-    // Si on est suffisamment proche, on arrête le mouvement
-    if (distance < 0.5) {  // Seuil ajustable
-        *vitesse = 0;
-        bc_set_speed(connection, 0, 0, 0);
-        return;
-    }
 
     // Normalisation du vecteur directionnel 
     float direction_x = vecteur_x / distance;

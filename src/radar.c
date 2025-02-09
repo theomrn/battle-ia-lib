@@ -55,7 +55,7 @@ void print_list(Radar *head, const char *type)
 }
 
 // Ping the map
-void process_radar_ping(BC_Connection *conn, BC_WorldInfo world, Radar **player_list, Radar **wall_list, Radar **boost_list)
+void process_radar_ping(BC_Connection *conn, BC_WorldInfo world, BC_PlayerData data ,Radar **player_list, Radar **wall_list, Radar **boost_list)
 {
     BC_List *list = bc_radar_ping(conn);
     if (list == NULL)
@@ -76,7 +76,7 @@ void process_radar_ping(BC_Connection *conn, BC_WorldInfo world, Radar **player_
         do
         {
             BC_MapObject *map_object = (BC_MapObject *)bc_ll_value(list);
-            if (map_object->type == OT_PLAYER)
+            if (map_object->type == OT_PLAYER && map_object->id != data.id)
             {
                 *player_list = Radar_list(*player_list, map_object);
             }
@@ -114,6 +114,5 @@ BC_MapObject nearest(Radar *list, BC_PlayerData data){
         }
         list = list->next;
     }
-    printf("nearest: %d, x: %f, y: %f\n", nearest.id, nearest.position.x, nearest.position.y);
     return nearest;
 }
