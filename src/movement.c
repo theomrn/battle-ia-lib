@@ -12,6 +12,7 @@ void movePlayer(BC_Connection *connection, double x, double y,BC_PlayerData play
     float distance = sqrt(vecteur_x*vecteur_x + vecteur_y*vecteur_y);
 
     if (distance > 15) *vitesse = 10;
+    else *vitesse = 5;
     
     // Si on est suffisamment proche, on arrête le mouvement
     if (distance < 0.5) {  // Seuil ajustable

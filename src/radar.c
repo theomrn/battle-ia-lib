@@ -87,7 +87,7 @@ void process_radar_ping(BC_Connection *conn, BC_WorldInfo world, Radar **player_
             else if (map_object->type == OT_BOOST)
             {
                 // Check if the boost is in the walls, the tank may be stuck if the boost is near the limit of the map
-                if ((map_object->position.x > 1) && (map_object->position.x < world.map_x - 1) && (map_object->position.y > 1) && (map_object->position.y < world.map_y - 1))
+                if ((map_object->position.x > 1.0) && (map_object->position.x < world.map_x - 1.0) && (map_object->position.y > 1.0) && (map_object->position.y < world.map_y - 1.0))
                 {
                     *boost_list = Radar_list(*boost_list, map_object);
                 }
@@ -114,5 +114,6 @@ BC_MapObject nearest(Radar *list, BC_PlayerData data){
         }
         list = list->next;
     }
+    printf("nearest: %d, x: %f, y: %f\n", nearest.id, nearest.position.x, nearest.position.y);
     return nearest;
 }

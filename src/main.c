@@ -5,7 +5,20 @@
 #include "tool.h"
 #include "unistd.h"
 #include "movement.h"
+#include <pthread.h>
 
+// Function to be executed by the thread
+void *fetch_and_print_data(void *arg)
+{
+    BC_Connection *conn = (BC_Connection *)arg;
+    while (1)
+    {
+        BC_PlayerData data = bc_get_player_data(conn);
+        Print_BC_PlayerData(data);
+        sleep(1); // Sleep for 1 second
+    }
+    return NULL;
+}
 
 int main(int argc, char *argv[])
 {
@@ -39,8 +52,13 @@ int main(int argc, char *argv[])
     {
         printf("Itération %d\n", loop_count++);
 
-        //BC_PlayerData data = bc_get_player_data(conn);
-        //Print_BC_PlayerData(data);
+        // Create a new thread to fetch and print data every 1 second
+        pthread_t thread_id;
+        if (pthread_create(&thread_id, NULL, fetch_and_print_data, (void *)conn) != 0)
+        {
+            fprintf(stderr, "Error creating thread\n");
+            return 1;
+        }
 
         printf("Scan radar\n");
         fflush(stdout);
@@ -54,33 +72,36 @@ int main(int argc, char *argv[])
         fflush(stdout);
 
         // Move to the nearest boost or random position
-        if (nearest_boost.id == NULL)
+        if (nearest_boost.position.x == 0.0 && nearest_boost.position.y == 0.0)
         {
             printf("Aucun boost détecté.\n");
             fflush(stdout);
             movePlayer(conn, rand() % world.map_x, rand() % world.map_y, data, &speed);
         }
-        else{
-        printf("Déplacement vers le boost le plus proche aux coorodonnées x = %f, y = %f\n", nearest_boost.position.x, nearest_boost.position.y);
-        fflush(stdout);
-        movePlayer(conn, nearest_boost.position.x, nearest_boost.position.y, data, &speed);
-        //movePlayer(conn, 50.0, 50.0, data, &speed);
+        else
+        {
+            printf("Déplacement vers le boost le plus proche aux coorodonnées x = %f, y = %f\n", nearest_boost.position.x, nearest_boost.position.y);
+            fflush(stdout);
+            movePlayer(conn, nearest_boost.position.x, nearest_boost.position.y, data, &speed);
+            // movePlayer(conn, 50.0, 50.0, data, &speed);
         }
 
         // Retrieve the nearest player
         BC_MapObject nearest_player = nearest(player_list, data);
-        if (nearest_player.id == -1)
+        if (nearest_player.id == NULL)
         {
             printf("Aucun joueur ennemi détecté.\n");
             fflush(stdout);
         }
-        else{
-        printf("Joueur le plus proche : ID: %d | Position: (x = %f, y = %f)\n", nearest_player.id, nearest_player.position.x, nearest_player.position.y);
-        fflush(stdout);
-        // Shoot on the nearest ennemy
-        printShootInfo(ShootOnTarget(conn, data.position.x, nearest_player.position.x, data.position.y, nearest_player.position.y));
+        else
+        {
+            printf("Joueur le plus proche : ID: %d | Position: (x = %f, y = %f)\n", nearest_player.id, nearest_player.position.x, nearest_player.position.y);
+            fflush(stdout);
+            // Shoot on the nearest ennemy
+            printShootInfo(ShootOnTarget(conn, data.position.x, nearest_player.position.x, data.position.y, nearest_player.position.y));
         }
 
+        print_list(boost_list, "boosts");
     }
 
     free_list(player_list);
